@@ -20,43 +20,21 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef CRYPTO_PROGMEMUTIL_H
-#define CRYPTO_PROGMEMUTIL_H
+#ifndef CRYPTO_SHA224_h
+#define CRYPTO_SHA224_h
 
-#if defined(__AVR__)
-#include <avr/pgmspace.h>
-#define pgm_read_qword(x)   \
-    (__extension__ ({ \
-        const uint32_t *_temp = (const uint32_t *)(x); \
-        ((uint64_t)pgm_read_dword(_temp)) | \
-        (((uint64_t)pgm_read_dword(_temp + 1)) << 32); \
-    }))
-#elif defined(ESP8266) || defined(ESP32)
-#include <pgmspace.h>
-#define pgm_read_qword(x)   \
-    (__extension__ ({ \
-        const uint32_t *_temp = (const uint32_t *)(x); \
-        ((uint64_t)pgm_read_dword(_temp)) | \
-        (((uint64_t)pgm_read_dword(_temp + 1)) << 32); \
-    }))
-#else
-#include <string.h>
-#define PROGMEM
-#ifndef pgm_read_byte
-# define pgm_read_byte(x)    (*(x))
-#endif
-#ifndef pgm_read_word
-# define pgm_read_word(x)    (*(x))
-#endif
-#ifndef pgm_read_dword
-# define pgm_read_dword(x)   (*(x))
-#endif
-#ifndef pgm_read_qword
-# define pgm_read_qword(x)   (*(x))
-#endif
-#ifndef memcpy_P
-# define memcpy_P(d,s,l)     memcpy((d), (s), (l))
-#endif
-#endif
+#include "SHA256.h"
+
+class SHA224 : public SHA256
+{
+public:
+    SHA224();
+
+    size_t hashSize() const;
+
+    void reset();
+
+    static const size_t HASH_SIZE = 28;
+};
 
 #endif
