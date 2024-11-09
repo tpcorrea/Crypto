@@ -233,7 +233,7 @@ bool Ed25519::verify(const uint8_t signature[64], const uint8_t publicKey[32],
  *
  * \param privateKey The resulting private key.
  *
- * The private key is generated with \link RNGClass::rand() RNG.rand()\endlink.
+ * The private key is generated with \link RNGClass::rand() rng.rand()\endlink.
  * It is the caller's responsibility to ensure that the global random number
  * pool has sufficient entropy to generate the 32 bytes of the key safely
  * before calling this function.
@@ -242,7 +242,7 @@ bool Ed25519::verify(const uint8_t signature[64], const uint8_t publicKey[32],
  */
 void Ed25519::generatePrivateKey(uint8_t privateKey[32])
 {
-    RNG.rand(privateKey, 32);
+    rng.rand(privateKey, 32);
 }
 
 /**

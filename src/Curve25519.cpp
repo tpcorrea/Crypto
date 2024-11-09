@@ -207,7 +207,7 @@ bool Curve25519::eval(uint8_t result[32], const uint8_t s[32], const uint8_t x[3
  * transmitted to any party or stored in permanent storage.  It only needs
  * to be kept in memory until dh2() is called.
  *
- * The \a f value is generated with \link RNGClass::rand() RNG.rand()\endlink.
+ * The \a f value is generated with \link RNGClass::rand() rng.rand()\endlink.
  * It is the caller's responsibility to ensure that the global random number
  * pool has sufficient entropy to generate the 32 bytes of \a f safely
  * before calling this function.
@@ -249,7 +249,7 @@ void Curve25519::dh1(uint8_t k[32], uint8_t f[32])
         // it valid as an "s" value for eval().  According to the specification
         // we need to mask off the 3 right-most bits of f[0], mask off the
         // left-most bit of f[31], and set the second to left-most bit of f[31].
-        RNG.rand(f, 32);
+        rng.rand(f, 32);
         f[0] &= 0xF8;
         f[31] = (f[31] & 0x7F) | 0x40;
 

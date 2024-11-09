@@ -69,6 +69,6 @@ private:
     void mixTRNG();
 };
 
-extern RNGClass RNG;
+extern RNGClass rng;
 
 #endif

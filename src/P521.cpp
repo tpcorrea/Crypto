@@ -170,7 +170,7 @@ bool P521::eval(uint8_t result[132], const uint8_t f[66], const uint8_t point[13
  * transmitted to any party or stored in permanent storage.  It only needs
  * to be kept in memory until dh2() is called.
  *
- * The \a f value is generated with \link RNGClass::rand() RNG.rand()\endlink.
+ * The \a f value is generated with \link RNGClass::rand() rng.rand()\endlink.
  * It is the caller's responsibility to ensure that the global random number
  * pool has sufficient entropy to generate the 66 bytes of \a f safely
  * before calling this function.
@@ -456,7 +456,7 @@ failed:
  *
  * \param privateKey The resulting private key.
  *
- * The private key is generated with \link RNGClass::rand() RNG.rand()\endlink.
+ * The private key is generated with \link RNGClass::rand() rng.rand()\endlink.
  * It is the caller's responsibility to ensure that the global random number
  * pool has sufficient entropy to generate the 521 bits of the key safely
  * before calling this function.
@@ -472,7 +472,7 @@ void P521::generatePrivateKey(uint8_t privateKey[66])
     // and discard it if it is not within the range 1 to q - 1.
     limb_t x[NUM_LIMBS_521BIT];
     do {
-        RNG.rand((uint8_t *)x, sizeof(x));
+        rng.rand((uint8_t *)x, sizeof(x));
 #if BIGNUMBER_LIMB_8BIT
         x[NUM_LIMBS_521BIT - 1] &= 0x01;
 #else

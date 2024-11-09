@@ -99,13 +99,13 @@
  *
  *     // Initialize the random number generator with the application tag
  *     // "MyApp 1.0" and load the previous seed from EEPROM.
- *     RNG.begin("MyApp 1.0");
+ *     rng.begin("MyApp 1.0");
  *
  *     // Stir in the Ethernet MAC address.
- *     RNG.stir(mac_address, sizeof(mac_address));
+ *     rng.stir(mac_address, sizeof(mac_address));
  *
- *     // Add the noise source to the list of sources known to RNG.
- *     RNG.addNoiseSource(noise);
+ *     // Add the noise source to the list of sources known to rng.
+ *     rng.addNoiseSource(noise);
  *
  *     // ...
  * }
@@ -119,7 +119,7 @@
  *     // ...
  *
  *     // Perform regular housekeeping on the random number generator.
- *     RNG.loop();
+ *     rng.loop();
  *
  *     // ...
  * }
@@ -156,7 +156,7 @@
  *
  * \sa RNGClass
  */
-RNGClass RNG;
+RNGClass rng;
 
 /**
  * \var RNGClass::SEED_SIZE
@@ -191,7 +191,7 @@ static const char tagRNG[16] PROGMEM = {
 // "expand 32-byte k" followed by 48 bytes set to the numbers 1 to 48.
 // The ChaCha20 output block is then truncated to the first 48 bytes.
 //
-// This value is intended to start the RNG in a semi-chaotic state if
+// This value is intended to start the rng in a semi-chaotic state if
 // we don't have a previously saved seed in EEPROM.
 static const uint8_t initRNG[48] PROGMEM = {
     0xB0, 0x2A, 0xAE, 0x7D, 0xEE, 0xCB, 0xBB, 0xB1,
@@ -351,7 +351,7 @@ static void stirUniqueIdentifier(void)
         ;   // do nothing until FRDY rises.
 
     // Stir the unique identifier into the entropy pool.
-    RNG.stir((uint8_t *)id, sizeof(id));
+    rng.stir((uint8_t *)id, sizeof(id));
 }
 
 // Erases the flash page containing the seed and then writes the new seed.
@@ -498,7 +498,7 @@ void RNGClass::begin(const char *tag)
     // accidentally generate the same sequence of random data again.
     save();
 
-    // The RNG has now been initialized.
+    // The rng has now been initialized.
     initialized = 1;
 }
 
@@ -508,7 +508,7 @@ void RNGClass::begin(const char *tag)
  * \param source The noise source to add, which will be polled regularly
  * by loop() to accumulate noise-based entropy from the source.
  *
- * RNG supports a maximum of four noise sources.  If the application needs
+ * rng supports a maximum of four noise sources.  If the application needs
  * more than that then the application must poll the noise sources itself by
  * calling NoiseSource::stir() directly.
  *
@@ -565,8 +565,8 @@ void RNGClass::setAutoSaveTime(uint16_t minutes)
  */
 void RNGClass::rand(uint8_t *data, size_t len)
 {
-    // Make sure that the RNG is initialized in case the application
-    // forgot to call RNG.begin() at startup time.
+    // Make sure that the rng is initialized in case the application
+    // forgot to call rng.begin() at startup time.
     if (!initialized)
         begin(0);
 
@@ -579,7 +579,7 @@ void RNGClass::rand(uint8_t *data, size_t len)
     // If we have pending TRNG data from the loop() function,
     // then force a stir on the state.  Otherwise mix in some
     // fresh data from the TRNG because it is possible that
-    // the application forgot to call RNG.loop().
+    // the application forgot to call rng.loop().
     if (trngPending) {
         stir(0, 0, 0);
         trngPending = 0;
@@ -638,8 +638,8 @@ void RNGClass::rand(uint8_t *data, size_t len)
  * void loop() {
  *     ...
  *
- *     if (!haveKey && RNG.available(sizeof(key))) {
- *         RNG.rand(key, sizeof(key));
+ *     if (!haveKey && rng.available(sizeof(key))) {
+ *         rng.rand(key, sizeof(key));
  *         haveKey = true;
  *     }
  *
@@ -680,7 +680,7 @@ bool RNGClass::available(size_t len) const
  * would be called as follows:
  *
  * \code
- * RNG.stir(noise_data, noise_bytes, noise_bytes * 2);
+ * rng.stir(noise_data, noise_bytes, noise_bytes * 2);
  * \endcode
  *
  * If \a credit is zero, then the \a data will be stirred in but no
